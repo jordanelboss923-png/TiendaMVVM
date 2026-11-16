@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using TiendaMVVM.Infrastructure;
 using TiendaMVVM.Models;
 using TiendaMVVM.Repositories;
+using TiendaMVVM.Services;
+
 
 namespace TiendaMVVM.ViewModels;
 
@@ -78,7 +80,7 @@ public class ProductosViewModel : ObservableObject
 
     private async Task AgregarAsync()
     {
-        var error = Validar(out var precio);
+        var error = ValidadorProducto.Validar(Nombre, PrecioTexto, Categoria, out var precio);
         if (error is not null) { Mensaje = error; return; }
 
         // Solo CategoriaId (no el objeto) para que EF no intente insertar la categoría otra vez
@@ -88,7 +90,7 @@ public class ProductosViewModel : ObservableObject
 
     private async Task GuardarAsync()
     {
-        var error = Validar(out var precio);
+        var error = ValidadorProducto.Validar(Nombre, PrecioTexto, Categoria, out var precio);
         if (error is not null) { Mensaje = error; return; }
 
         var editado = new Producto
@@ -135,15 +137,4 @@ public class ProductosViewModel : ObservableObject
         Categoria = null;
     }
 
-    // TODO PARTE 2 (refactor): extraer esta validación a Services/ValidadorProducto.cs
-    private string? Validar(out decimal precio)
-    {
-        precio = 0;
-        if (string.IsNullOrWhiteSpace(Nombre)) return "El nombre es obligatorio.";
-        if (Nombre.Trim().Length > 100) return "El nombre no puede pasar de 100 caracteres.";
-        if (!decimal.TryParse(PrecioTexto, out precio)) return "El precio no es un número válido.";
-        if (precio < 0 || precio > 999999) return "El precio debe estar entre 0 y 999999.";
-        if (Categoria is null) return "Seleccione una categoría.";
-        return null;
-    }
 }
