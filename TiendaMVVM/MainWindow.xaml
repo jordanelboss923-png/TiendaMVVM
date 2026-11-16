@@ -8,6 +8,8 @@
         <TabItem Header="Productos">
             <views:ProductosView DataContext="{Binding Productos}"/>
         </TabItem>
-        <!-- PARTE 2: tu compañero agrega aquí la pestaña de Reportes -->
+        <TabItem Header="Reportes">
+            <views:ReportesView DataContext="{Binding Reportes}"/>
+        </TabItem>
     </TabControl>
 </Window>
