@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="TiendaMVVM.Views.ReportesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Resumen general -->
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,12">
+            <StackPanel Margin="0,0,30,0">
+                <TextBlock Text="Productos" Foreground="DimGray"/>
+                <TextBlock Text="{Binding TotalProductos}" FontSize="20" FontWeight="SemiBold"/>
+            </StackPanel>
+            <StackPanel Margin="0,0,30,0">
+                <TextBlock Text="Valor total" Foreground="DimGray"/>
+                <TextBlock Text="{Binding ValorTotal, StringFormat=N2}" FontSize="20" FontWeight="SemiBold"/>
+            </StackPanel>
+            <StackPanel Margin="0,0,30,0">
+                <TextBlock Text="Precio promedio" Foreground="DimGray"/>
+                <TextBlock Text="{Binding PrecioPromedio, StringFormat=N2}" FontSize="20" FontWeight="SemiBold"/>
+            </StackPanel>
+            <StackPanel Margin="0,0,30,0">
+                <TextBlock Text="Más caro" Foreground="DimGray"/>
+                <TextBlock Text="{Binding ProductoMasCaro}" FontSize="20" FontWeight="SemiBold"/>
+            </StackPanel>
+            <Button Content="Actualizar" Command="{Binding ActualizarCommand}"
+                    VerticalAlignment="Center" Padding="12,6"/>
+        </StackPanel>
+
+        <!-- GroupBy: resumen por categoría -->
+        <GroupBox Grid.Row="1" Grid.Column="0" Header="Por categoría" Margin="0,0,6,0">
+            <DataGrid ItemsSource="{Binding PorCategoria}" AutoGenerateColumns="False"
+                      IsReadOnly="True" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Categoría" Binding="{Binding Nombre}" Width="*"/>
+                    <DataGridTextColumn Header="Cantidad" Binding="{Binding Cantidad}" Width="80"/>
+                    <DataGridTextColumn Header="Total" Binding="{Binding Total, StringFormat=N2}" Width="90"/>
+                    <DataGridTextColumn Header="Promedio" Binding="{Binding Promedio, StringFormat=N2}" Width="90"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <!-- Where + OrderBy: filtro por precio mínimo -->
+        <GroupBox Grid.Row="1" Grid.Column="1" Header="Filtrar por precio mínimo" Margin="6,0,0,0">
+            <Grid Margin="6">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <TextBlock Text="Precio ≥" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox Width="100"
+                             Text="{Binding PrecioMinimoTexto, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <DataGrid Grid.Row="1" ItemsSource="{Binding Filtrados}" AutoGenerateColumns="False"
+                          IsReadOnly="True" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
+                        <DataGridTextColumn Header="Precio" Binding="{Binding Precio, StringFormat=N2}" Width="90"/>
+                        <DataGridTextColumn Header="Categoría" Binding="{Binding Categoria.Nombre}" Width="110"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </GroupBox>
+
+        <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding Mensaje}"
+                   Margin="0,10,0,0" Foreground="Firebrick" TextWrapping="Wrap"/>
+    </Grid>
+</UserControl>
